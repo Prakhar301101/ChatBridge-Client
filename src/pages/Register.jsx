@@ -1,15 +1,20 @@
-import React, { useState } from 'react'
+import React, { useState,useEffect,useContext } from 'react'
 import Footer from '../components/Footer'
 import Header from '../components/Header'
 import { Link,Navigate } from 'react-router-dom'
+import { UserContext } from '../UserContext'
 
 const Register = () => {
   const[email,setEmail] =useState('');
   const[username,setUsername] =useState('');
   const[password,setPassword] =useState('');
   const[redirect,setRedirect] =useState(false);
-
+  const{ setUserName, setId } = useContext(UserContext);
   const userData={email,name:username,password};
+
+  useEffect(() => {
+    localStorage.clear();
+  }, [])
 
   const registerUser= async (e)=>{
     e.preventDefault();
@@ -25,8 +30,10 @@ const Register = () => {
     }
     if(response.status==200){
       const data=await response.json();
+      setUserName(data.name);
+      setId(data._id);
       alert('Account Created');
-      console.log(data);
+      localStorage.setItem('jwtToken',data.token);
       setRedirect(true);
     }
   }

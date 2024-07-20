@@ -1,16 +1,21 @@
-import React, { useState } from 'react'
+import React, { useContext, useState ,useEffect} from 'react'
 import Footer from '../components/Footer'
 import Header from '../components/Header'
 import { Link,Navigate } from 'react-router-dom'
+import { UserContext } from '../UserContext';
 
 const Login = () => {
   const[username,setUsername] =useState('');
   const[password,setPassword] =useState('');
   const[email,setEmail]=useState('');
   const[redirect,setRedirect] =useState(false);
+  const{ setUserName, setId } = useContext(UserContext);
 
   const userData={email,name:username,password};
-
+  
+  useEffect(() => {
+    localStorage.clear();
+  }, [])
   const loginUser= async (e)=>{
     e.preventDefault();
     const response = await fetch("http://localhost:8000/api/users/login", {
@@ -20,13 +25,16 @@ const Login = () => {
         'Content-Type':'application/json'
       },
     })
-    if(response.status==400){
+    if(response.status===400){
       alert('Error while while logging in,try different credentials!');
     }
-    if(response.status==200){
+    if(response.status===200){
       const data=await response.json();
-      alert('LogIn successful');
       console.log(data);
+      setUserName(data.name);
+      setId(data._id);
+      alert('LogIn successful');
+      localStorage.setItem('jwtToken',data.token);
       setRedirect(true);
     }
   }
@@ -34,6 +42,7 @@ const Login = () => {
     return <Navigate to={"/chat"}/>
   }
   return (
+
     <div className='min-h-screen flex flex-col items-center'>
       <Header/>
       <div className=" text-white h-1/2 mt-6 md:mt-10 w-4/5 max-w-lg px-4 py-6 rounded-2xl bg-transparent backdrop-blur-xl flex flex-col justify-center border-[1px] border-gray-400 shadow-xl">

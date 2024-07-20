@@ -1,4 +1,4 @@
-import React from 'react';
+import React,{useEffect} from 'react';
 import Header from '../components/Header';
 import Footer from '../components/Footer';
 import { Link } from 'react-router-dom';
@@ -6,6 +6,9 @@ import Register from './Register';
 import Login from './Login';
 
 const Home = () => {
+  useEffect(() => {
+    localStorage.clear();
+  }, [])
   return (
     <div className='min-h-screen flex flex-col'>
       <Header />
