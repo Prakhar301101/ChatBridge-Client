@@ -8,8 +8,8 @@ const Header = () => {
             <div className='text-xl md:text-3xl'><ion-icon name="chatbubbles" ></ion-icon></div>
             <h1 className='text-xl md:text-2xl font-medium'>ChatBridge</h1>
         </div>
-        <div className=' flex items-center'>
-            <h1 className='text-xl md:text-2xl font-medium'>Github</h1>
+        <div className='flex items-center cursor-pointer'>
+          <a href='https://github.com/Prakhar301101/ChatBridge-Client'><h1 className='text-xl md:text-2xl font-medium'>Github</h1></a>
             <div className='text-xl md:text-3xl '><ion-icon name="logo-github"></ion-icon></div>
         </div>
       </div>

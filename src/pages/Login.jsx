@@ -30,7 +30,6 @@ const Login = () => {
     }
     if(response.status===200){
       const data=await response.json();
-      console.log(data);
       setUserName(data.name);
       setId(data._id);
       alert('LogIn successful');

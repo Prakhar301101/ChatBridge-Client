@@ -4,8 +4,13 @@
 @tailwind components;
 @tailwind utilities;
 
+*:focus {
+    outline: none;
+}
+
 body{
     font-family: "Quicksand";
     background: rgb(45,45,140);
     background: radial-gradient(circle, rgba(45,45,140,1) 46%, rgba(5,49,51,1) 100%);
 }
+
