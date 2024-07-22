@@ -29,7 +29,7 @@ const Home = () => {
           </p>
           <p className="py-2 text-sm md:text-xl text-center ">
             If its your first time here please <span className='font-bold cursor-pointer'><Link to="/register">Register</Link></span> or if you are an old
-            user just <spann className='font-bold cursor-pointer'><Link to="/login">Sign-In</Link></spann>
+            user just <span className='font-bold cursor-pointer'><Link to="/login">Sign-In</Link></span>
           </p>
         </div>
       </div>
