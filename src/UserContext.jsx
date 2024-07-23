@@ -7,7 +7,7 @@ export function UserContextProvider({ children }) {
   const [id, setId] = useState();
 
   useEffect(() => {
-      fetch("http://localhost:8000/api/users/me", {
+      fetch("https://chatbridge-server.onrender.com/api/users/me", {
         method: "GET",
         credentials:'include'
       })

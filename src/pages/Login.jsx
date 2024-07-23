@@ -16,7 +16,7 @@ const Login = () => {
   
   const loginUser= async (e)=>{
     e.preventDefault();
-    const response = await fetch("http://localhost:8000/api/users/login", {
+    const response = await fetch("https://chatbridge-server.onrender.com/api/users/login", {
       method: "POST",
       body:JSON.stringify(userData),
       headers:{

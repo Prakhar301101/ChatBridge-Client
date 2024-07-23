@@ -23,7 +23,7 @@ const Chat = () => {
   }, []);
 
   const connectToSocket = () => {
-    const socket = new WebSocket('ws://localhost:8000');
+    const socket = new WebSocket('wss://chatbridge-server.onrender.com');
     setWs(socket);
     socket.addEventListener('message', handleMessage);
     socket.addEventListener('close', () => {
@@ -36,7 +36,7 @@ const Chat = () => {
 
   // Fetch all users to display contacts
   useEffect(() => {
-    fetch('http://localhost:8000/api/users', {
+    fetch('https://chatbridge-server.onrender.com/api/users', {
       method: 'GET',
       credentials: 'include',
     })
@@ -53,7 +53,7 @@ const Chat = () => {
   // Fetch messages when a contact is selected
   useEffect(() => {
     if (selectedContact) {
-      fetch(`http://localhost:8000/api/messages/${selectedContact}`, {
+      fetch(`https://chatbridge-server.onrender.com/api/messages/${selectedContact}`, {
         method: 'GET',
         credentials: 'include',
       })
@@ -75,7 +75,7 @@ const Chat = () => {
 
   // Logout function
   const logout = () => {
-    fetch('http://localhost:8000/api/users/logout', {
+    fetch('https://chatbridge-server.onrender.com/api/users/logout', {
       method: 'POST',
       credentials: 'include',
     })
