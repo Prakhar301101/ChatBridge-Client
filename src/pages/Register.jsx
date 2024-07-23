@@ -12,10 +12,6 @@ const Register = () => {
   const{ setUserName, setId } = useContext(UserContext);
   const userData={email,name:username,password};
 
-  useEffect(() => {
-    localStorage.clear();
-  }, [])
-
   const registerUser= async (e)=>{
     e.preventDefault();
     const response = await fetch("http://localhost:8000/api/users", {
@@ -24,6 +20,7 @@ const Register = () => {
       headers:{
         'Content-Type':'application/json'
       },
+      credentials:'include'
     })
     if(response.status==400){
       alert('Error while creating account,try different credentials!');
@@ -33,7 +30,6 @@ const Register = () => {
       setUserName(data.name);
       setId(data._id);
       alert('Account Created');
-      sessionStorage.setItem('jwtToken',data.token);
       setRedirect(true);
     }
   }

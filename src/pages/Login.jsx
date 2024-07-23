@@ -13,6 +13,7 @@ const Login = () => {
 
   const userData={email,name:username,password};
   
+  
   const loginUser= async (e)=>{
     e.preventDefault();
     const response = await fetch("http://localhost:8000/api/users/login", {
@@ -21,6 +22,7 @@ const Login = () => {
       headers:{
         'Content-Type':'application/json'
       },
+      credentials:'include', 
     })
     if(response.status===400){
       alert('Error while while logging in,try different credentials!');
@@ -30,7 +32,6 @@ const Login = () => {
       setUserName(data.name);
       setId(data._id);
       alert('LogIn successful');
-      sessionStorage.setItem('jwtToken',data.token);
       setRedirect(true);
     }
   }
