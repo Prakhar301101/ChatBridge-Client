@@ -4,18 +4,21 @@ import Footer from '../components/Footer';
 import Logo from '../components/Logo';
 import { UserContext } from '../UserContext';
 import Avatar from '../components/Avatar';
+import {Navigate} from 'react-router-dom';
 
 const Chat = () => {
   const [ws, setWs] = useState(null);
   const [selectedContact, setSelectedContact] = useState('');
-  const [onlinePeople, setonlinePeople] = useState({});
+  const [onlinePeople, setOnlinePeople] = useState({});
+  const [people, setPeople] = useState({});
   const [newMessage, setNewMessage] = useState('');
   const [messages, setMessages] = useState([]);
+  const [goBack,setgoBack] =useState(false);
   const token = localStorage.getItem('jwtToken');
   const divUnderMessages = useRef();
   const { username, id } = useContext(UserContext);
 
-  //socket connection initiated
+  // Establish socket connection when the component mounts
   useEffect(() => {
     connectToSocket();
   }, []);
@@ -32,7 +35,25 @@ const Chat = () => {
     });
   };
 
-  //fetch messages b/w users
+  // Fetch all users to display contacts
+  useEffect(() => {
+    fetch(`http://localhost:8000/api/users`, {
+      method: 'GET',
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+    })
+      .then((response) => response.json())
+      .then((data) => {
+        const allPeople = {};
+        data.forEach((el) => {
+          allPeople[el._id] = el.name;
+        });
+        setPeople(allPeople);
+      });
+  }, []);
+
+  // Fetch messages when a contact is selected
   useEffect(() => {
     if (selectedContact) {
       fetch(`http://localhost:8000/api/messages/${selectedContact}`, {
@@ -46,33 +67,33 @@ const Chat = () => {
     }
   }, [selectedContact]);
 
-  //function to display all connected socket clients
-  const showPeopleOnline = (data) => {
-    const people = {};
-    data.forEach(({ userId, userName }) => {
-      people[userId] = userName;
-    });
-    setonlinePeople(people);
-  };
-
-  //function to handle message b/w socket and clients
+  // Update online users state or messages when receiving a WebSocket message
   const handleMessage = (e) => {
     const messageData = JSON.parse(e.data);
     if (messageData.type === 'connectedClients') {
       const clients = messageData.clients;
       showPeopleOnline(clients);
     } else if ('text' in messageData) {
+      if(messageData.sender===selectedContact.userId){
       setMessages((prv) => [...prv, { ...messageData }]);
+      }
     }
+  };
+
+  const showPeopleOnline = (data) => {
+    const online = {};
+    data.forEach(({ userId, userName }) => {
+      online[userId] = userName;
+    });
+    setOnlinePeople(online);
   };
 
   const selectContact = (userId) => {
     setSelectedContact(userId);
   };
 
-  //function to sendMessage through the socket
+  // Send a message through the WebSocket
   const sendMessage = (ev) => {
-    // console.log("sending");
     ev.preventDefault();
     ws.send(
       JSON.stringify({
@@ -91,25 +112,29 @@ const Chat = () => {
     ]);
   };
 
-  //useEffect to scroll the chat to the bottom using useref
+  // Scroll the chat to the bottom whenever messages change
   useEffect(() => {
     const div = divUnderMessages.current;
     if (div) {
-      div.scrollIntoView({ behavious: 'smooth', block: 'end' });
+      div.scrollIntoView({ behavior: 'smooth', block: 'end' });
     }
   }, [messages]);
 
-  //deleting my data from the clients (easy to display)
-  const onlinePeopleExceptMe = { ...onlinePeople };
+
+
+  // Filter out the current user from the list of online people
+  const onlinePeopleExceptMe = { ...people };
   delete onlinePeopleExceptMe[id];
 
   return (
     <div className="min-h-screen flex flex-col items-center">
       <Header />
       <div className="Chat-area h-auto w-screen md:w-3/4 lg:w flex flex-grow p-2 md:py-5 lg:py-8 md:px-7 lg:px-12 justify-center font-semibold">
-        <div className="w-1/4 md:w-1/3  bg-blue-700 rounded-sm flex flex-col ">
+        <div className=" w-1/4 md:w-1/3  bg-blue-700 rounded-sm flex flex-col ">
           <Logo />
-          {Object.keys(onlinePeopleExceptMe).map((userId) => (
+          <div className='relative h-full'>
+            <div className='absolute overflow-y-scroll inset-0'>
+            {Object.keys(onlinePeopleExceptMe).map((userId) => (
             <div
               onClick={() => selectContact(userId)}
               key={userId}
@@ -117,10 +142,15 @@ const Chat = () => {
                 selectedContact === userId ? 'bg-blue-600 shadow-lg' : ''
               } `}
             >
-              <Avatar online={true} username={onlinePeople[userId]} userId={userId} />
-              <span>{onlinePeople[userId]}</span>
+              <Avatar online={userId in onlinePeople} username={people[userId]} userId={userId} />
+              <span>{people[userId]}</span>
             </div>
-          ))}
+          ))} 
+            </div>
+          </div>
+          <div className='p-2 bg-blue-500 text-white flex gap-1 item-center justify-center text-center'>
+            <span className='p-[2px] sm:p-1 text-xs sm:text-base'>Welcome {username}</span>
+           </div>
         </div>
         <div className="w-3/4 md:w-2/3 flex flex-col bg-blue-300  rounded-sm p-2 ">
           <div className="flex-grow ">
@@ -143,7 +173,7 @@ const Chat = () => {
                     >
                       <div
                         className={`text-white text-left text-xs md:text-base sm:py-1 py-2 px-1
-                      sm:px-2 rounded-md md:text-md my-2 ${
+                      sm:px-2 rounded-md md:text-md my-1 md:my-2 ${
                         message.sender === id ? 'bg-blue-500' : 'bg-sky-600'
                       }`}
                       >

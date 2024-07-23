@@ -3,7 +3,7 @@ import { createContext, useEffect, useState } from "react";
 export  const UserContext = createContext({});
 
 export function UserContextProvider({ children }) {
-  const token = localStorage.getItem('jwtToken');
+  const token = sessionStorage.getItem('jwtToken');
   const [username, setUserName] = useState();
   const [id, setId] = useState();
 

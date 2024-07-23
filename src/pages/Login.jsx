@@ -13,9 +13,6 @@ const Login = () => {
 
   const userData={email,name:username,password};
   
-  useEffect(() => {
-    localStorage.clear();
-  }, [])
   const loginUser= async (e)=>{
     e.preventDefault();
     const response = await fetch("http://localhost:8000/api/users/login", {
@@ -33,7 +30,7 @@ const Login = () => {
       setUserName(data.name);
       setId(data._id);
       alert('LogIn successful');
-      localStorage.setItem('jwtToken',data.token);
+      sessionStorage.setItem('jwtToken',data.token);
       setRedirect(true);
     }
   }

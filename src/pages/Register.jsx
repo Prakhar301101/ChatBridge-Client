@@ -33,7 +33,7 @@ const Register = () => {
       setUserName(data.name);
       setId(data._id);
       alert('Account Created');
-      localStorage.setItem('jwtToken',data.token);
+      sessionStorage.setItem('jwtToken',data.token);
       setRedirect(true);
     }
   }

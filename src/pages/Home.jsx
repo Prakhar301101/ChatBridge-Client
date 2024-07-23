@@ -6,9 +6,6 @@ import Register from './Register';
 import Login from './Login';
 
 const Home = () => {
-  useEffect(() => {
-    localStorage.clear();
-  }, [])
   return (
     <div className='min-h-screen flex flex-col'>
       <Header />
