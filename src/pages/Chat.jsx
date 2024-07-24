@@ -20,6 +20,11 @@ const Chat = () => {
   // Establish socket connection when the component mounts
   useEffect(() => {
     connectToSocket();
+    return () => {
+      if (ws) {
+        ws.close();
+      }
+    };
   }, []);
 
   const connectToSocket = () => {
@@ -80,11 +85,11 @@ const Chat = () => {
       credentials: 'include',
     })
       .then(() => {
+        if(ws) ws.close();
         setWs(null);
         setId(null);
         setUserName(null);
         setRedirect(true);  
-        ws.close();
       });
   };
 

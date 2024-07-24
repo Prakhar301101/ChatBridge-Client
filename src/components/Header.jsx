@@ -14,7 +14,7 @@ const Header = () => {
         </div>
         </Link>
         <div className="flex items-center cursor-pointer">
-          <a href="https://github.com/Prakhar301101/ChatBridge-Client">
+          <a href="https://github.com/Prakhar301101/ChatBridge">
             <h1 className="text-xl md:text-2xl font-medium">Github</h1>
           </a>
           <div className="text-xl md:text-3xl ">
