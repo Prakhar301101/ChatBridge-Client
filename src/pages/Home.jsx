@@ -23,8 +23,8 @@ const Home = () => {
             features designed for today&apos;s fast-paced digital world.
           </p>
           <p className="py-2 text-sm md:text-xl text-center ">
-            If its your first time here please <span className='font-bold cursor-pointer'><Link to="/register">Register</Link></span> or if you are an old
-            user just <span className='font-bold cursor-pointer'><Link to="/login">Sign-In</Link></span>
+            If its your first time here please <span className='font-extrabold underline cursor-pointer'><Link to="/register">Register</Link></span> or if you are an old
+            user just <span className='font-bold underline cursor-pointer'><Link to="/login">Sign-In</Link></span>
           </p>
         </div>
       </div>
