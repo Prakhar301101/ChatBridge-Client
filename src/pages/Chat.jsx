@@ -6,6 +6,8 @@ import Logo from '../components/Logo';
 import { UserContext } from '../UserContext';
 import Avatar from '../components/Avatar';
 
+const serverRoute="chatbridge-server.onrender.com";
+
 const Chat = () => {
   const [ws, setWs] = useState(null);
   const [selectedContact, setSelectedContact] = useState('');
@@ -20,10 +22,9 @@ const Chat = () => {
   // Establish socket connection when the component mounts
   useEffect(() => {
     connectToSocket();
-    return () => {
-      if (ws) {
-        ws.close();
-      }
+    fetchAllPeople();
+    return ()=>{
+      if(ws) ws.close();
     };
   }, []);
 
@@ -40,7 +41,9 @@ const Chat = () => {
   };
 
   // Fetch all users to display contacts
-  useEffect(() => {
+
+
+  const fetchAllPeople=async ()=>{
     fetch('https://chatbridge-server.onrender.com/api/users', {
       method: 'GET',
       credentials: 'include',
@@ -53,7 +56,7 @@ const Chat = () => {
         });
         setPeople(allPeople);
       });
-  }, []);
+  }
 
   // Fetch messages when a contact is selected
   useEffect(() => {
@@ -72,9 +75,10 @@ const Chat = () => {
     const messageData = JSON.parse(e.data);
     if (messageData.type === 'connectedClients') {
       const clients = messageData.clients;
+      fetchAllPeople();
       showPeopleOnline(clients);
     } else if ('text' in messageData) {
-      setMessages((prv) => [...prv, { ...messageData }]);
+        setMessages((prv) => [...prv, { ...messageData }]);  
     }
   };
 
